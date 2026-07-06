@@ -4,14 +4,10 @@
     <meta charset="UTF-8">
     <title>กำลังเข้าสู่ระบบเช็คชื่อ...</title>
     <script>
-        // โค้ดอัจฉริยะ: เช็คว่าถ้ามีคำว่า ?token= ติดมากับลิงก์ (แปลว่าเป็นเด็กที่สแกน QR Code มา)
-        // ระบบจะดีดส่งไปหน้า student.html พร้อมพ่วงรหัส Token ไปทันที
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('token')) {
             window.location.href = "student.html" + window.location.search;
         } else {
-            // แต่ถ้ากดเข้าลิงก์หลักมาเฉยๆ ไม่มีรหัสอะไรต่อท้าย (แปลว่าเป็นตัวอาจารย์เอง)
-            // ระบบจะพาเจ้านายเด้งไปหน้าจอตั้งค่าของอาจารย์ทันทีโดยไม่ต้องพิมพ์ต่อท้ายครับ!
             window.location.href = "teacher.html";
         }
     </script>
