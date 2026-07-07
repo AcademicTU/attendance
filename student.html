@@ -207,8 +207,14 @@
                 fingerprint: device.fingerprint
             });
 
+            // ส่ง device info ทั้งใน body และ URL query string กัน no-cors ตัด body
+            const url = APPS_SCRIPT_URL +
+                '?ua='  + encodeURIComponent(device.userAgent) +
+                '&sc='  + encodeURIComponent(device.screenSize) +
+                '&fp='  + encodeURIComponent(device.fingerprint);
+
             try {
-                await fetch(APPS_SCRIPT_URL, {
+                await fetch(url, {
                     method:  "POST",
                     mode:    "no-cors",
                     headers: { "Content-Type": "text/plain" },
