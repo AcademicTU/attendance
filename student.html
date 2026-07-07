@@ -57,11 +57,30 @@
         </div>
     </div>
 
-    <div class="text-center text-[10px] text-gray-600 font-mono mb-1">ANTI-CHEAT GPS SECURITY // BY J.A.R.V.I.S.</div>
-    <div class="text-center text-[11px] text-gray-500 mb-4">หากเกิดข้อผิดพลาด กรุณาแจ้งอาจารย์โดยตรงหลังคาบครับ</div>
+    <div class="text-center text-[10px] text-gray-600 font-mono mb-4">ANTI-CHEAT GPS SECURITY // BY J.A.R.V.I.S.</div>
 
     <script>
         const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNHjhWhr6gnpDgLckTAebA9EPpGuSCh74g1NjmD0Xx07Nd-_qFPpfAoA9GYmZ0OnKL/exec";
+
+        // ── เก็บข้อมูลเครื่องเพื่อระบุตัวตน ──
+        function getDeviceInfo() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = '14px Arial';
+            ctx.fillText('fp', 2, 2);
+            const cp = canvas.toDataURL().slice(-20);
+            const raw = [navigator.userAgent, screen.width+'x'+screen.height,
+                         screen.colorDepth, new Date().getTimezoneOffset(),
+                         navigator.hardwareConcurrency||0, navigator.language, cp].join('|');
+            let hash = 0;
+            for (let i = 0; i < raw.length; i++) { hash = ((hash<<5)-hash)+raw.charCodeAt(i); hash|=0; }
+            const fp = 'FP_' + Math.abs(hash).toString(36).toUpperCase();
+
+            const ua = navigator.userAgent;
+            let os = /iPhone|iPad/.test(ua)?'iOS':/Android/.test(ua)?'Android':/Windows/.test(ua)?'Windows':/Mac/.test(ua)?'macOS':'Other';
+            let br = /CriOS/.test(ua)?'Chrome/iOS':/Chrome/.test(ua)?'Chrome':/Safari/.test(ua)?'Safari':/Firefox/.test(ua)?'Firefox':'Other';
+            return { userAgent: os+' / '+br, screenSize: screen.width+'x'+screen.height, fingerprint: fp };
+        }
 
         const urlParams = new URLSearchParams(window.location.search);
         const currentSubject = urlParams.get('sub') || "ไม่พบข้อมูลรายวิชา";
@@ -133,13 +152,17 @@
             const btn = document.querySelector('button[onclick="submitAttendance()"]');
             btn.innerText = "📡 กำลังบันทึกข้อมูล...";
 
+            const device  = getDeviceInfo();
             const payload = {
                 studentId,
                 studentName,
-                subject:  decodeURIComponent(currentSubject),
-                teacher:  teacherName,
-                date:     setupDate,
-                distance
+                subject:     decodeURIComponent(currentSubject),
+                teacher:     teacherName,
+                date:        setupDate,
+                distance,
+                userAgent:   device.userAgent,
+                screenSize:  device.screenSize,
+                fingerprint: device.fingerprint
             };
 
             try {
