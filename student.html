@@ -48,7 +48,7 @@
                 📍 แชร์ GPS และส่งชื่อเข้าเรียน
             </button>
             <p class="text-center text-[11px] text-yellow-500/70 font-mono mt-1">
-                ⚠️ อุปกรณ์นี้สามารถลงชื่อในคาบได้เพียง 1 ครั้งเท่านั้น
+                📱 ระบบบันทึกอุปกรณ์ทุกครั้งที่ส่งชื่อ
             </p>
         </div>
 
@@ -109,12 +109,16 @@
             } catch(e) {}
         }
 
+        // แสดง banner เตือนถ้าเคยลงชื่อในคาบนี้แล้ว (ไม่บล็อก)
         window.addEventListener('DOMContentLoaded', function() {
             const lock = getDeviceLock();
             if (lock) {
-                document.getElementById('form-section').classList.add('hidden');
-                showStatus("blocked", "⛔ อุปกรณ์นี้ถูกใช้งานไปแล้ว",
-                    "เครื่องนี้ได้ลงชื่อในคาบนี้แล้ว ไม่สามารถลงชื่อซ้ำได้ครับ\n\nหากเกิดข้อผิดพลาด ติดต่อ MS Teams: Wittawat Pansri\nSelfie ตัวเองให้เห็นหน้าอ.ส่งมาเป็นหลักฐานด้วยนะครับ 😉");
+                const banner = document.createElement('div');
+                banner.className = "max-w-sm w-full mx-auto mb-2 bg-yellow-500/10 border border-yellow-500/30 rounded-xl px-4 py-3 text-center";
+                banner.innerHTML = '<p class="text-yellow-400 text-sm font-bold mb-1">📱 ระบบได้บันทึกอุปกรณ์นี้ไว้แล้ว</p>' +
+                                   '<p class="text-yellow-300/70 text-xs">อย่าลงชื่อแทนกันนะจ๊ะ 😊</p>';
+                const formWrap = document.querySelector('.bg-gray-800');
+                formWrap.parentNode.insertBefore(banner, formWrap);
             }
         });
 
@@ -150,18 +154,10 @@
                 return;
             }
 
-            // เช็ค device lock
+            // เช็ค device lock — แจ้งเตือนแต่ยังส่งได้ (Apps Script กัน duplicate อยู่แล้ว)
             const lock = getDeviceLock();
             if (lock) {
-                if (lock.studentId !== document.getElementById('std-id').value.trim()) {
-                    showStatus("blocked", "⛔ อุปกรณ์นี้ถูกใช้งานไปแล้ว",
-                        "เครื่องนี้ได้ลงชื่อในคาบนี้แล้ว ไม่สามารถลงชื่อซ้ำได้ครับ\n\nหากเกิดข้อผิดพลาด ติดต่อ MS Teams: Wittawat Pansri\nSelfie ตัวเองให้เห็นหน้าอ.ส่งมาเป็นหลักฐานด้วยนะครับ 😉");
-                } else {
-                    showStatus("blocked", "✅ เช็คชื่อไปแล้ว",
-                        "คุณได้ลงชื่อในคาบนี้แล้วครับ");
-                }
-                return;
-            }
+                // แสดง banner เตือนแต่ไม่หยุด — ให้ส่งต่อได้
 
             const id   = document.getElementById('std-id').value.trim();
             const name = document.getElementById('std-name').value.trim();
