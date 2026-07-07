@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div class="text-center text-[10px] text-gray-600 font-mono mb-1">Student Attendance // BY NongArmNarak</div>
+    <div class="text-center text-[10px] text-gray-600 font-mono mb-1">ANTI-CHEAT GPS SECURITY // BY J.A.R.V.I.S.</div>
     <div class="text-center text-[11px] text-gray-500 mb-4">หากเกิดข้อผิดพลาด กรุณาแจ้งอาจารย์โดยตรงหลังคาบครับ</div>
 
     <script>
@@ -111,9 +111,7 @@
             if (lock) {
                 document.getElementById('form-section').classList.add('hidden');
                 showStatus("blocked", "⛔ อุปกรณ์นี้ถูกใช้งานไปแล้ว",
-                        "เครื่องนี้ได้ลงชื่อในคาบนี้แล้ว ไม่สามารถลงชื่อซ้ำได้ครับ",
-                        "หากเกิดข้อผิดพลาด ติดต่อ MS Teams: Wittawat Pansri",
-                        "Selfie ตัวเองให้เห็นหน้าอ.ส่งมาเป็นหลักฐานด้วยนะครับ 😉");
+                    "เครื่องนี้ได้ลงชื่อในคาบนี้แล้ว ไม่สามารถลงชื่อซ้ำได้ครับ\n\nหากเกิดข้อผิดพลาด ติดต่อ MS Teams: Wittawat Pansri\nSelfie ตัวเองให้เห็นหน้าอ.ส่งมาเป็นหลักฐานด้วยนะครับ 😉");
             }
         });
 
@@ -154,9 +152,7 @@
             if (lock) {
                 if (lock.studentId !== document.getElementById('std-id').value.trim()) {
                     showStatus("blocked", "⛔ อุปกรณ์นี้ถูกใช้งานไปแล้ว",
-                        "เครื่องนี้ได้ลงชื่อในคาบนี้แล้ว ไม่สามารถลงชื่อซ้ำได้ครับ",
-                        "หากเกิดข้อผิดพลาด ติดต่อ MS Teams: Wittawat Pansri",
-                        "Selfie ตัวเองให้เห็นหน้าอ.ส่งมาเป็นหลักฐานด้วยนะครับ 😉");
+                        "เครื่องนี้ได้ลงชื่อในคาบนี้แล้ว ไม่สามารถลงชื่อซ้ำได้ครับ\n\nหากเกิดข้อผิดพลาด ติดต่อ MS Teams: Wittawat Pansri\nSelfie ตัวเองให้เห็นหน้าอ.ส่งมาเป็นหลักฐานด้วยนะครับ 😉");
                 } else {
                     showStatus("blocked", "✅ เช็คชื่อไปแล้ว",
                         "คุณได้ลงชื่อในคาบนี้แล้วครับ");
@@ -241,7 +237,9 @@
             document.getElementById('status-icon').innerText  = icons[type]  || "❌";
             document.getElementById('status-title').className = "text-xl font-bold mb-1 " + (colors[type] || "text-red-500");
             document.getElementById('status-title').innerText = title;
-            document.getElementById('status-desc').innerText  = desc;
+            // รองรับ \n เป็น line break
+            document.getElementById('status-desc').innerHTML  =
+                desc.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>');
         }
     </script>
 </body>
